@@ -7,8 +7,12 @@
 //
 
 #import "FISTableViewController.h"
+#import "Message.h"
+#import "FISDataStore.h"
 
 @interface FISTableViewController ()
+@property (nonatomic, strong) NSArray *messages;
+@property (nonatomic, strong) FISDataStore *dataStore;
 
 @end
 
@@ -27,6 +31,24 @@
 {
     [super viewDidLoad];
     
+    self.dataStore = [FISDataStore sharedDataStore];
+    
+    Message *message1 = [NSEntityDescription insertNewObjectForEntityForName:@"Message" inManagedObjectContext:self.dataStore.managedObjectContext];
+    message1.content = @"Test message 1";
+    message1.createdAt = [NSDate date];
+    
+    Message *message2 = [NSEntityDescription insertNewObjectForEntityForName:@"Message" inManagedObjectContext:self.dataStore.managedObjectContext];
+    message2.content = @"Test message 2";
+    message2.createdAt = [NSDate date];
+    
+    Message *message3 = [NSEntityDescription insertNewObjectForEntityForName:@"Message" inManagedObjectContext:self.dataStore.managedObjectContext];
+    message3.content = @"Final test message";
+    message3.createdAt = [NSDate date];
+    
+    self.messages = @[message1, message2, message3];
+    [self.dataStore saveContext];
+    
+    
     // Uncomment the following line to preserve selection between presentations.
     // self.clearsSelectionOnViewWillAppear = NO;
     
@@ -44,28 +66,31 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-#warning Potentially incomplete method implementation.
+//#warning Potentially incomplete method implementation.
     // Return the number of sections.
-    return 0;
+    return 1;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-#warning Incomplete method implementation.
+//#warning Incomplete method implementation.
     // Return the number of rows in the section.
-    return 0;
+    return self.messages.count;
 }
 
-/*
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:<#@"reuseIdentifier"#> forIndexPath:indexPath];
     
-    // Configure the cell...
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"basicCell" forIndexPath:indexPath];
+    
+    Message *message = self.messages[indexPath.row];
+    cell.textLabel.text = message.content;
+    cell.detailTextLabel.text = [NSString stringWithFormat:@"%@", message.createdAt];
     
     return cell;
 }
-*/
+
 
 /*
 // Override to support conditional editing of the table view.
